@@ -1,7 +1,8 @@
 use anchor_lang::prelude::*;
 
 #[account]
-pub struct InitBid {
+#[derive(InitSpace)]
+pub struct Auction {
     pub seller: Pubkey,
     pub asset_mint: Pubkey,
     pub asset_type: AssetType,
@@ -15,12 +16,13 @@ pub struct InitBid {
 
     pub highest_bidder: Option<Pubkey>,
     pub settled: bool,
+    #[max_len(200)]
     pub tee_winner_proof: Option<Vec<u8>>,
 
     pub bump: u8,
 }
 
-#[derive(Clone, Debug, AnchorSerialize, AnchorDeserialize, PartialEq)]
+#[derive(Clone, Debug, AnchorSerialize, AnchorDeserialize, PartialEq, InitSpace)]
 pub enum AssetType {
     Nft,
     Token,

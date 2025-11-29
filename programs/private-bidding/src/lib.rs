@@ -1,13 +1,13 @@
-pub mod constants;
-pub mod error;
-pub mod instructions;
-pub mod state;
-
 use anchor_lang::prelude::*;
 
-pub use constants::*;
-pub use instructions::*;
-pub use state::*;
+mod constants;
+mod error;
+mod instructions;
+mod state;
+
+use constants::*;
+use instructions::*;
+use state::*;
 
 declare_id!("CQ17v9aregimgfUchRgfx2uSEsPcekGdKvu9NaU5C1Xs");
 
@@ -15,7 +15,13 @@ declare_id!("CQ17v9aregimgfUchRgfx2uSEsPcekGdKvu9NaU5C1Xs");
 pub mod private_bidding {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+    pub fn create_auction(
+        ctx: Context<CreateAuction>,
+        asset_type: AssetType,
+        end_time: i64,
+    ) -> Result<()> {
+        ctx.accounts
+            .create_auction(asset_type, end_time, &ctx.bumps)?;
         Ok(())
     }
 }
