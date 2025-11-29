@@ -7,6 +7,8 @@ use crate::{
     state::{Auction, Bid},
 };
 
+use crate::error::ErrorCode;
+
 #[derive(Accounts)]
 pub struct PlaceBid<'info> {
     #[account(mut)]
@@ -42,6 +44,20 @@ pub struct PlaceBid<'info> {
 
 impl<'info> PlaceBid<'info> {
     pub fn place_bid(&mut self, amount: u64, bumps: &PlaceBidBumps) -> Result<()> {
+        require!(
+            Clock::get()?.unix_timestamp < self.auction.end_time,
+            ErrorCode::AuctionEnded
+        );
+
+        require!(!self.auction.settled, ErrorCode::AuctionSettled);
+
+        require!(amount >= self.auction.min_bid_amount, ErrorCode::BidTooLow);
+
+        require!(
+            self.bidder.key() != self.auction.seller,
+            ErrorCode::SellerCannotBid
+        );
+
         self.bid.set_inner(Bid {
             auction: self.auction.key(),
             bidder: self.bidder.key(),
