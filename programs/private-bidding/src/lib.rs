@@ -82,4 +82,9 @@ pub mod private_bidding {
 
         Ok(())
     }
+
+    pub fn settle_auction(ctx: Context<SettleAuction>) -> Result<()> {
+        ctx.accounts.settle_auction(&ctx.bumps)?;
+        Ok(())
+    }
 }
