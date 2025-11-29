@@ -1,6 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_lang::system_program;
 use anchor_lang::system_program::Transfer;
+use ephemeral_rollups_sdk::anchor::delegate;
 
 use crate::{
     constants::{ANCHOR_DISCRIMINATOR_SIZE, AUCTION_SEED, BID_ESCROW_SEED, BID_SEED},
@@ -80,4 +81,62 @@ impl<'info> PlaceBid<'info> {
 
         Ok(())
     }
+}
+
+#[delegate]
+#[derive(Accounts)]
+
+pub struct DelegateBid<'info> {
+    #[account(mut)]
+    pub bidder: Signer<'info>,
+
+    /// CHECK: TEE validator address
+    pub validator: Option<AccountInfo<'info>>,
+
+    /// CHECK: The bid PDA to delegate to TEE
+    #[account(
+        mut,
+        del,
+        seeds = [BID_SEED.as_bytes(), auction.key().as_ref(), bidder.key().as_ref()],
+        bump,
+    )]
+    pub bid_pda: AccountInfo<'info>,
+
+    #[account(
+        mut,
+        seeds = [BID_SEED.as_bytes(), auction.key().as_ref(), bidder.key().as_ref()],
+        bump = auction.bump,
+    )]
+    pub auction: Account<'info, Auction>,
+}
+
+#[derive(Accounts)]
+pub struct CreateBidPermission<'info> {
+    #[account(mut)]
+    pub bidder: Signer<'info>,
+
+    #[account(
+        seeds = [BID_SEED.as_bytes(), auction.key().as_ref(), bidder.key().as_ref()],
+        bump,
+    )]
+    pub bid: Account<'info, Bid>,
+
+    #[account(
+        seeds = [AUCTION_SEED.as_bytes(), auction.asset_mint.key().as_ref(), auction.seller.key().as_ref()],
+        bump = auction.bump,
+    )]
+    pub auction: Account<'info, Auction>,
+
+    /// CHECK: Permission PDA (created by permission program)
+    #[account(mut)]
+    pub permission: UncheckedAccount<'info>,
+
+    /// CHECK: Permission group PDA
+    #[account(mut)]
+    pub group: UncheckedAccount<'info>,
+
+    /// CHECK: MagicBlock permission program
+    pub permission_program: UncheckedAccount<'info>,
+
+    pub system_program: Program<'info, System>,
 }

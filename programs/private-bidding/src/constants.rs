@@ -1,6 +1,7 @@
 use anchor_lang::prelude::*;
 
 pub const ANCHOR_DISCRIMINATOR_SIZE: usize = 8;
+pub const TEE_VALIDATOR: Pubkey = pubkey!("FnE6VJT5QNZdedZPnCoLsARgBwoE6DeJNjBs2H1gySXA");
 
 #[constant]
 pub const AUCTION_SEED: &str = "auction";
