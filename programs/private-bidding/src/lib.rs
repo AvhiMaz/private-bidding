@@ -26,4 +26,9 @@ pub mod private_bidding {
         ctx.accounts.deposit_asset()?;
         Ok(())
     }
+    
+    pub fn place_bid(ctx: Context<PlaceBid>, amount: u64) -> Result<()> {
+        ctx.accounts.place_bid(amount, &ctx.bumps)?;
+        Ok(())
+    }
 }
