@@ -14,6 +14,7 @@ pub struct Auction {
     pub min_bid_amount: u64,
     pub highest_bid_amount: u64,
     pub bid_count: u32,
+    pub total_bid_pool: u64,
 
     pub highest_bidder: Option<Pubkey>,
     pub settled: bool,

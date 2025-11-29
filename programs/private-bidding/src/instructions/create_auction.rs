@@ -60,6 +60,7 @@ impl<'info> CreateAuction<'info> {
             min_bid_amount: 0,
             highest_bid_amount: 0,
             bid_count: 0,
+            total_bid_pool: 0,
             highest_bidder: None,
             settled: false,
             tee_winner_proof: None,
