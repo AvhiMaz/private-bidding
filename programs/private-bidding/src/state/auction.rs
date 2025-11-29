@@ -6,6 +6,7 @@ pub struct Auction {
     pub seller: Pubkey,
     pub asset_mint: Pubkey,
     pub asset_type: AssetType,
+    pub amount: u64,
 
     pub start_time: i64,
     pub end_time: i64,
@@ -27,5 +28,4 @@ pub enum AssetType {
     Nft,
     Token,
     CompressedNft,
-    SolDomain,
 }

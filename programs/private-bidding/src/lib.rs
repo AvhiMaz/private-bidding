@@ -19,9 +19,11 @@ pub mod private_bidding {
         ctx: Context<CreateAuction>,
         asset_type: AssetType,
         end_time: i64,
+        amount: u64,
     ) -> Result<()> {
         ctx.accounts
-            .create_auction(asset_type, end_time, &ctx.bumps)?;
+            .create_auction(asset_type, end_time, amount, &ctx.bumps)?;
+        ctx.accounts.deposit_asset()?;
         Ok(())
     }
 }
